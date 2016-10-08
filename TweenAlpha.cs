@@ -29,11 +29,11 @@ public class TweenAlpha : TweenerBase
 		
 		if (canvasGroup != null)
 		{
-			tweener = canvasGroup.DOFade(to, duration).SetAs(CommonTParms);
+			tweener = canvasGroup.DOFade(to, duration);
 		}
 		else if (graphic != null)
 		{
-			tweener = graphic.DOFade(to, duration).SetAs(CommonTParms);
+			tweener = graphic.DOFade(to, duration);
 		}
     }
 

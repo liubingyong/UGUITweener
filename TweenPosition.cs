@@ -11,10 +11,10 @@ public class TweenPosition : TweenerBase {
 	protected override void Initialize ()
 	{
 		rectTransform = GetComponent<RectTransform>();
-
-		tweener = rectTransform
-			.DOLocalMove(to, duration).SetAs(CommonTParms);
-	}
+        
+        tweener = rectTransform
+			.DOLocalMove(to, duration);
+    }
 
 	protected override void ResetFrom ()
 	{

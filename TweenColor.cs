@@ -15,9 +15,9 @@ public class TweenColor : TweenerBase {
 
 		if (graphic != null)
 		{
-			tweener = graphic.DOColor(to, duration).SetAs(CommonTParms);
-		}
-	}
+			tweener = graphic.DOColor(to, duration);
+        }
+    }
 
 	protected override void ResetFrom ()
 	{

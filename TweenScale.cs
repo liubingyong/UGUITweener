@@ -14,8 +14,8 @@ public class TweenScale : TweenerBase {
 	{
 		rectTransform = GetComponent<RectTransform>();
 
-		tweener = rectTransform.DOScale(to, duration).SetAs(CommonTParms);
-	}
+		tweener = rectTransform.DOScale(to, duration);
+    }
 
 	protected override void ResetFrom ()
 	{

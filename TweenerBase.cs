@@ -3,6 +3,8 @@ using System.Collections;
 using DG.Tweening;
 
 public abstract class TweenerBase : MonoBehaviour {
+    public bool autoPlay = false;
+    public bool autoKill = true;
 
     public float delay = 0f;
     public float duration = 1f;
@@ -15,31 +17,58 @@ public abstract class TweenerBase : MonoBehaviour {
 	protected Tweener tweener;
 	private bool isForward;
 
-	protected TweenParams CommonTParms {
+	protected TweenParams CommonTweenParams {
 		get {
 			return new TweenParams().SetEase(ease)
 					.SetLoops(loops, loopType)
-					.SetDelay(delay);
+					.SetDelay(delay)
+                    .SetAutoKill(autoKill);
 		}
 	}											
 
-    void Awake()
-    {
-        Initialize();
-    }
-
     void Start () {
-		Play(true);
-		isForward = !isForward;
-	}
+        Initialize();
+
+        if (autoPlay) {
+            isForward = !isForward;
+        } else
+        {
+            tweener.Pause();
+        }
+    }
 	
 	protected virtual void Initialize() { }
 	protected virtual void ResetFrom() { }
 
-	public void Play(bool forward) {
+	public void Play(bool forward = true, TweenCallback onCompleteCallback = null, TweenCallback onRewindCallback = null) {
+        if (!this.enabled)
+        {
+            // onCompleteCallback?.Invoke();
+            if (onCompleteCallback != null)
+            {
+                onCompleteCallback();
+            }
+
+            return;
+        }
+
 		ResetFrom();
 
-		if (forward) {
+        var newTweenParams = CommonTweenParams;
+
+        if (onCompleteCallback != null)
+        {
+            newTweenParams.OnComplete(onCompleteCallback);
+        }
+
+        if (onRewindCallback != null)
+        {
+            newTweenParams.OnRewind(onRewindCallback);
+        }
+
+        tweener.SetAs(newTweenParams);
+
+        if (forward) {
 			tweener.PlayForward();
 		} else {
 			tweener.PlayBackwards();
@@ -48,18 +77,11 @@ public abstract class TweenerBase : MonoBehaviour {
 		isForward = forward;
 	}
 
-	public void PlayForward() {
-		Play(true);
-	}
+    public void Toggle(TweenCallback onCompleteCallback = null, TweenCallback onRewindCallback = null)
+    {
+        Play(!isForward, onCompleteCallback, onRewindCallback);
+    }
 
-	public void PlayReverse() {
-		Play(false);
-	}
-
-	public void Toggle() {
-		Play(!isForward);
-	}
-	
     public virtual void SetStartToCurrentValue() { }
 
     public virtual void SetEndToCurrentValue() { }
