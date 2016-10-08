@@ -26,14 +26,17 @@ public abstract class TweenerBase : MonoBehaviour {
 		}
 	}											
 
-    void Start () {
+    void Awake()
+    {
         Initialize();
 
+        tweener.Pause();
+    }
+
+    void Start () {
         if (autoPlay) {
+            Play();
             isForward = !isForward;
-        } else
-        {
-            tweener.Pause();
         }
     }
 	
@@ -52,7 +55,12 @@ public abstract class TweenerBase : MonoBehaviour {
             return;
         }
 
-		ResetFrom();
+        if (autoKill)
+        {
+            Initialize();
+
+            tweener.Pause();
+        }
 
         var newTweenParams = CommonTweenParams;
 
@@ -69,9 +77,10 @@ public abstract class TweenerBase : MonoBehaviour {
         tweener.SetAs(newTweenParams);
 
         if (forward) {
-			tweener.PlayForward();
+            ResetFrom();
+            tweener.PlayForward();
 		} else {
-			tweener.PlayBackwards();
+            tweener.PlayBackwards();
 		}
 
 		isForward = forward;
